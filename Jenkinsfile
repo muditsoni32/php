@@ -16,7 +16,7 @@ pipeline {
                         sh '''
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
                             "docker build -t my-php-app:latest -f Dockerfile . && \
-                            docker tag my-php-app:latest muditsoni32/my-php-app:latest"
+                            sudo docker tag my-php-app:latest muditsoni32/my-php-app:latest"
                         '''
                     }
                 }
