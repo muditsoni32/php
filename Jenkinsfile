@@ -3,26 +3,36 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerregistry' // ID of Jenkins credentials for Docker Hub
+        REMOTE_HOST = '54.158.234.194' // Remote server where Docker build will take place
+        REMOTE_USER = 'ec2-user' // Assuming it's an EC2 instance, typically 'ec2-user'
     }
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build and Tag Docker Image on Remote') {
             steps {
-                // Build the Docker image using the provided Dockerfile
                 script {
-                    def image = docker.build('my-php-app:latest', '-f Dockerfile .')
-                    sh "docker tag my-php-app:latest muditsoni32/my-php-app:latest"
-                    
+                    sshagent(credentials: ['mudit_key']) {
+                        // Execute Docker build and tag commands remotely
+                        sh '''
+                        ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
+                            "docker build -t my-php-app:latest -f Dockerfile . && \
+                            docker tag my-php-app:latest muditsoni32/my-php-app:latest"
+                        '''
+                    }
                 }
             }
         }
 
-        stage('Tag and Push Docker Image') {
+        stage('Push Docker Image') {
             steps {
-                // Tag and Push the Docker image to a Docker registry
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_CREDENTIALS_ID) {
-                        docker.image('muditsoni32/my-php-app:latest').push()
+                    sshagent(credentials: ['mudit_key']) {
+                        // Push the Docker image from remote server to Docker Hub
+                        sh '''
+                        ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
+                            "docker login -u muditsoni32 -p [PASSWORD] && \
+                            docker push muditsoni32/my-php-app:latest"
+                        '''
                     }
                 }
             }
@@ -30,11 +40,11 @@ pipeline {
 
         stage('Deploy Docker Image') {
             steps {
-                // SSH into the target server and run the Docker container
                 script {
                     sshagent(credentials: ['mudit_key']) {
+                        // SSH into the target server and run the Docker container
                         sh '''
-                            ssh -o StrictHostKeyChecking=no ec2-user@18.206.147.42 \
+                        ssh -o StrictHostKeyChecking=no ec2-user@18.206.147.42 \
                             "sudo docker pull muditsoni32/my-php-app:latest && \
                             sudo docker run -d --name my-php-app -p 80:80 muditsoni32/my-php-app:latest"
                         '''
