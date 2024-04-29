@@ -58,7 +58,7 @@ pipeline {
                         sh '''
                         ssh -o StrictHostKeyChecking=no ec2-user@18.206.147.42 \
                             "sudo docker pull muditsoni32/my-php-app:latest && \
-                            sudo docker run -d --name my-php-app -p 80:80 muditsoni32/my-php-app:latest"
+                            sudo docker run -d --name my-php-app1 -p 80:80 muditsoni32/my-php-app:latest"
                         '''
                     }
                 }
