@@ -26,7 +26,7 @@ pipeline {
                         // Execute Docker build and tag commands remotely
                         sh '''
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
-                            "cd /path/to/remote/workspace && \
+                            "cd /home/ec2-user/ && \
                              docker build -t my-php-app:latest -f Dockerfile . && \
                              sudo docker tag my-php-app:latest muditsoni32/my-php-app:latest"
                         '''
