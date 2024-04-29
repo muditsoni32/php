@@ -42,7 +42,7 @@ pipeline {
                         // Push the Docker image from remote server to Docker Hub
                         sh '''
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
-                            "docker login -u muditsoni32 -p [PASSWORD] && \
+                            "docker login -u muditsoni32 -p mudit#@12 && \
                             docker push muditsoni32/my-php-app:latest"
                         '''
                     }
