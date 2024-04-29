@@ -13,7 +13,7 @@ pipeline {
                 script {
                     sshagent(credentials: ['mudit_key']) {
                         // Copying the Dockerfile and project files to the remote server
-                        sh "scp -o StrictHostKeyChecking=no -r . ${REMOTE_USER}@${REMOTE_HOST}:/home/ec2-user/"
+                        sh "sudo scp -o StrictHostKeyChecking=no -r . ${REMOTE_USER}@${REMOTE_HOST}:/home/ec2-user/"
                     }
                 }
             }
@@ -27,7 +27,7 @@ pipeline {
                         sh '''
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
                             "cd /home/ec2-user/ && \
-                             docker build -t my-php-app:latest -f Dockerfile . && \
+                             sudo docker build -t my-php-app:latest -f Dockerfile . && \
                              sudo docker tag my-php-app:latest muditsoni32/my-php-app:latest"
                         '''
                     }
