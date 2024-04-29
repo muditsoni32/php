@@ -13,7 +13,7 @@ pipeline {
                 script {
                     sshagent(credentials: ['mudit_key']) {
                         // Copying the Dockerfile and project files to the remote server
-                        sh "rsync -avz -exclude '.git' -e 'StrictHostKeyChecking=no' -r . ${REMOTE_USER}@${REMOTE_HOST}:/home/ec2-user/"
+                        sh "rsync -avz --exclude '.git' -e 'ssh -o StrictHostKeyChecking=no' . ${REMOTE_USER}@${REMOTE_HOST}:/home/ec2-user/"
                     }
                 }
             }
