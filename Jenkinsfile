@@ -1,13 +1,24 @@
 pipeline {
-    agent any // Use any available Jenkins agent
+    agent any
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'dockerregistry' // ID of Jenkins credentials for Docker Hub
-        REMOTE_HOST = '54.158.234.194' // Remote server where Docker build will take place
-        REMOTE_USER = 'ec2-user' // Assuming it's an EC2 instance, typically 'ec2-user'
+        DOCKER_CREDENTIALS_ID = 'dockerregistry'
+        REMOTE_HOST = '54.158.234.194'
+        REMOTE_USER = 'ec2-user'
     }
 
     stages {
+        stage('Prepare Remote Environment') {
+            steps {
+                script {
+                    sshagent(credentials: ['mudit_key']) {
+                        // Copying the Dockerfile and project files to the remote server
+                        sh "scp -o StrictHostKeyChecking=no -r . ${REMOTE_USER}@${REMOTE_HOST}:/path/to/remote/workspace"
+                    }
+                }
+            }
+        }
+
         stage('Build and Tag Docker Image on Remote') {
             steps {
                 script {
@@ -15,8 +26,9 @@ pipeline {
                         // Execute Docker build and tag commands remotely
                         sh '''
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
-                            "docker build -t my-php-app:latest -f Dockerfile . && \
-                            sudo docker tag my-php-app:latest muditsoni32/my-php-app:latest"
+                            "cd /path/to/remote/workspace && \
+                             docker build -t my-php-app:latest -f Dockerfile . && \
+                             sudo docker tag my-php-app:latest muditsoni32/my-php-app:latest"
                         '''
                     }
                 }
