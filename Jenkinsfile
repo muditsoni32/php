@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent phpagent1
 
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerregistry'
