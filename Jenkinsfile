@@ -1,6 +1,7 @@
 pipeline {
-    agent phpagent1
-
+    agent {
+        label 'phpagent1'
+    }
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerregistry'
         REMOTE_HOST = '54.158.234.194'
