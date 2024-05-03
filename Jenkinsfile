@@ -58,7 +58,10 @@ pipeline {
                         // SSH into the target server and run the Docker container
                         sh '''
                         ssh -o StrictHostKeyChecking=no ec2-user@18.206.147.42 \
-                            "sudo docker pull muditsoni32/my-php-app:latest && \
+                            "sudo docker stop my-php-app2 || true && \
+                            sudo docker rm my-php-app2 || true && \
+                            sudo docker rmi muditsoni32/my-php-app2:latest || true && \
+                            sudo docker pull muditsoni32/my-php-app:latest && \
                             sudo docker run -d --name my-php-app1 -p 80:80 muditsoni32/my-php-app:latest"
                         '''
                     }
