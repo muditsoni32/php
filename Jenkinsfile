@@ -12,7 +12,7 @@ pipeline {
         stage('Prepare Remote Environment') {
             steps {
                 script {
-                    sshagent(credentials: ['mudit_key']) {
+                    sshagent(credentials: ['mudit1']) {
                         // Copying the Dockerfile and project files to the remote server
                         sh "rsync -avz --exclude '.git' -e 'ssh -o StrictHostKeyChecking=no' . ${REMOTE_USER}@${REMOTE_HOST}:/home/ec2-user/"
                     }
@@ -23,7 +23,7 @@ pipeline {
         stage('Build and Tag Docker Image on Remote') {
             steps {
                 script {
-                    sshagent(credentials: ['mudit_key']) {
+                    sshagent(credentials: ['mudit1']) {
                         // Execute Docker build and tag commands remotely
                         sh '''
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
@@ -39,7 +39,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    sshagent(credentials: ['mudit_key']) {
+                    sshagent(credentials: ['mudit1']) {
                         // Push the Docker image from remote server to Docker Hub
                         sh '''
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
@@ -54,7 +54,7 @@ pipeline {
         stage('Deploy Docker Image') {
             steps {
                 script {
-                    sshagent(credentials: ['mudit_key']) {
+                    sshagent(credentials: ['mudit1']) {
                         // SSH into the target server and run the Docker container
                         sh '''
                         ssh -o StrictHostKeyChecking=no ec2-user@3.80.30.99 \
