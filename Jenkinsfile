@@ -1,10 +1,10 @@
 pipeline {
     agent {
-        label 'phpagent1'
+        label 'runthisonmyworkermachine'
     }
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerregistry'
-        REMOTE_HOST = '54.158.234.194'
+        REMOTE_HOST = '35.173.129.16'
         REMOTE_USER = 'ec2-user'
     }
 
@@ -57,7 +57,7 @@ pipeline {
                     sshagent(credentials: ['mudit_key']) {
                         // SSH into the target server and run the Docker container
                         sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@18.206.147.42 \
+                        ssh -o StrictHostKeyChecking=no ec2-user@3.80.30.99 \
                             "sudo docker stop my-php-app1 || true && \
                             sudo docker rm my-php-app1 || true && \
                             sudo docker rmi muditsoni32/my-php-app:latest || true && \
