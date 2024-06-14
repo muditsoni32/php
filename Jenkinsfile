@@ -3,8 +3,8 @@ pipeline {
         label 'runthisonmyworkermachine'
     }
     environment {
-        DOCKER_CREDENTIALS_ID = 'dockerregistry'
-        REMOTE_HOST = '35.173.129.16'
+        DOCKER_CREDENTIALS_ID = 'dockerregistry'        
+        REMOTE_HOST = '54.242.44.34' // this is image build public ip where we will build the image with code etc
         REMOTE_USER = 'ec2-user'
     }
 
@@ -57,7 +57,7 @@ pipeline {
                     sshagent(credentials: ['mudit1']) {
                         // SSH into the target server and run the Docker container
                         sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@3.80.30.99 \
+                        ssh -o StrictHostKeyChecking=no ec2-user@54.160.52.37 \
                             "sudo docker stop my-php-app1 || true && \
                             sudo docker rm my-php-app1 || true && \
                             sudo docker rmi muditsoni32/my-php-app:latest || true && \
