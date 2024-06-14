@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'runthisonmyworkermachine'
+        label 'nodeagent2'
     }
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerregistry'        
