@@ -36,38 +36,53 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    sshagent(credentials: ['mudit1']) {
-                        // Push the Docker image from remote server to Docker Hub
-                        sh '''
-                        ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
-                            "docker login -u muditsoni32 -p mudit#@12 && \
-                            docker push muditsoni32/my-php-app:latest"
-                        '''
-                    }
-                }
-            }
-        }
+        // stage('Push Docker Image') {
+        //     steps {
+        //         script {
+        //             sshagent(credentials: ['mudit1']) {
+        //                 // Push the Docker image from remote server to Docker Hub
+        //                 sh '''
+        //                 ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \
+        //                     "docker login -u muditsoni32 -p mudit#@12 && \
+        //                     docker push muditsoni32/my-php-app:latest"
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
 
-        stage('Deploy Docker Image') {
+        // stage('Deploy Docker Image') {
+        //     steps {
+        //         script {
+        //             sshagent(credentials: ['mudit1']) {
+        //                 // SSH into the target server and run the Docker container
+        //                 sh '''
+        //                 ssh -o StrictHostKeyChecking=no ec2-user@54.160.52.37 \
+        //                     "sudo docker stop my-php-app1 || true && \
+        //                     sudo docker rm my-php-app1 || true && \
+        //                     sudo docker rmi muditsoni32/my-php-app:latest || true && \
+        //                     sudo docker pull muditsoni32/my-php-app:latest && \
+        //                     sudo docker run -d --name my-php-app1 -p 80:80 muditsoni32/my-php-app:latest"
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
+        stage('Push Image to Test Server') {
             steps {
-                script {
-                    sshagent(credentials: ['mudit1']) {
-                        // SSH into the target server and run the Docker container
-                        sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@54.160.52.37 \
-                            "sudo docker stop my-php-app1 || true && \
-                            sudo docker rm my-php-app1 || true && \
-                            sudo docker rmi muditsoni32/my-php-app:latest || true && \
-                            sudo docker pull muditsoni32/my-php-app:latest && \
-                            sudo docker run -d --name my-php-app1 -p 80:80 muditsoni32/my-php-app:latest"
-                        '''
-                    }
-                }
+                 script {
+                     
+                 }
             }
         }
+        stage('Push Image to Prod Server') {
+            steps {
+                 script {
+                     
+                 }
+            }
+        }
+        
     }
 
     post {
